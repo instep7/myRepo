@@ -1,0 +1,22 @@
+*Instructions can easily be found online for importing the tweepy library
+**This uses v3 of the Youtube API, again instructions can be found online
+  for importing the corresponding library
+
+
+You have to create 2 files to store your keys:
+
+Twitter FILE:
+Name >> TwitterKeys.py
+Content >> 
+API_Key="X"
+API_Secret_Key="X"
+Access_Token="X"
+Access_Token_Secret="X"
+Bearer_Token=r"X"
+Client_ID="X"
+Client_Secret="X"
+
+YT FILE:
+Name >> YTKeys.py
+Content >> 
+API_Key="X"
