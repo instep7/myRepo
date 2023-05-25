@@ -1,3 +1,6 @@
+This Twitter Bot creates a tweet when a Youtube Channel posts a new video
+It is currently configured to do this for Chael Sonnen's YT Channel
+
 *Instructions can easily be found online for importing the tweepy library
 **This uses v3 of the Youtube API, again instructions can be found online
   for importing the corresponding library
@@ -20,3 +23,7 @@ YT FILE:
 Name >> YTKeys.py
 Content >> 
 API_Key="X"
+
+You also want to create a file for logging video id's so you aren't uploading the same video:
+Name >> LatestVideo.txt
+*Can just leave blank, the file will read/write to it
