@@ -4,12 +4,11 @@ import random
 
 pg.init()
 
-
 display_width = 800
 display_height = 1000
 
 gameDisplay = pg.display.set_mode((display_width,display_height))
-pg.display.set_caption("A Bit Racey")
+pg.display.set_caption("LANE SPLITTER 0.2")
 
 black = (0, 0, 0)
 white = (255, 255, 255)
@@ -27,6 +26,16 @@ carImg = pg.image.load('racecar.png')
 road_surface = pg.Surface((600,1000))
 road_surface.fill(black)
 
+global HighScoreFile
+HighScoreFile = open("HighScore.txt", "r+")
+global highScore
+highScore = HighScoreFile.read()
+highScore = highScore.strip('\x00')
+highScore = int(highScore)
+
+global dodged
+dodged = 0
+
 def things_dodged(count):
     font = pg.font.SysFont(None, 25)
     text = font.render("Dodged: "+str(count), True, black)
@@ -39,22 +48,37 @@ def car(x,y):
     gameDisplay.blit(carImg, (x,y))
 
 def text_objects(text, font):
-    textSurface = font.render(text, True, white)
+    textSurface = font.render(text, True, (0, 0, 255), white)
     return textSurface, textSurface.get_rect()
 
-def message_display(text):
-    largeText = pg.font.Font('freesansbold.ttf',115)
-    TextSurf, TextRect = text_objects(text, largeText)
+def message_display(text1, text2, text3):
+    largeText = pg.font.Font('freesansbold.ttf',30)
+    TextSurf, TextRect = text_objects(text1, largeText)
+    TextRect.center = ((display_width/2),(display_height/6))
+    gameDisplay.blit(TextSurf, TextRect)
+    TextSurf, TextRect = text_objects(text2, largeText)
+    TextRect.center = ((display_width/2),(display_height/3))
+    gameDisplay.blit(TextSurf, TextRect)
+    TextSurf, TextRect = text_objects(text3, largeText)
     TextRect.center = ((display_width/2),(display_height/2))
     gameDisplay.blit(TextSurf, TextRect)
     pg.display.update()
-    time.sleep(2)
+    time.sleep(5)
     game_loop()
 
 def crash():
-    message_display("You Crashed")
+    global dodged, highScore
+    score = dodged
+    if score > highScore:
+        HighScoreFile.truncate(0)
+        HighScoreFile.write(str(score))
+        highScore = score
+        message_display("  You Crashed...  ", "  NEW HIGH SCORE: " + str(highScore), "")
+    else:
+        message_display("  You Crashed...  ", "  SCORE: " + str(score) + "  ", "  Try to beat the HIGH SCORE: " + str(highScore) + "  ")
 
 def game_loop():
+    global dodged
     x = (display_width * 0.45)
     y = (display_height * 0.8)
 
@@ -117,7 +141,6 @@ def game_loop():
                 if event.key == pg.K_LEFT or event.key == pg.K_RIGHT or event.key == pg.K_UP or event.key == pg.K_DOWN:
                     x_change = 0
                     y_change = 0
-            print(event)
 
         x += x_change
         y += y_change
@@ -187,14 +210,14 @@ def game_loop():
             thing_width += (dodged * 1.2)
 
         if thing_starty < y and y < thing_starty+thing_height:
-            print('y crossover')
 
             if x > thing_startx and x < thing_startx + thing_width or x+car_width > thing_startx and x + car_width < thing_startx+thing_width:
-                print('x crossover')
                 crash()
 
         pg.display.update()
         clock.tick(60)
+
+    
 
 game_loop()
 pg.quit()
